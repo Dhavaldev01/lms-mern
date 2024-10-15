@@ -1,17 +1,19 @@
-import { Input } from "../input";
-import { Label } from "../label";
+import { Input } from "../ui/input";
+import { Label } from "../ui/label";
 import {
+  Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "../select";
-import { Textarea } from "../textarea";
+} from "../ui/select";
+import { Textarea } from "../ui/textarea";
 
 
 function FormControls({ formControls = [], formData, setFormData }) {
   function renderComponentByType(getControlItem) {
     let element = null;
+    const currentControlItemvalue = formData[getControlItem.name || '']
 
     switch (getControlItem.componentType) {
       case "input":
@@ -21,13 +23,24 @@ function FormControls({ formControls = [], formData, setFormData }) {
             name={getControlItem.name}
             placeholder={getControlItem.placeholder}
             type={getControlItem.type}
+            value={currentControlItemvalue}
+            onChange ={(event)=> setFormData({
+              ...formData,
+              [getControlItem.name] : event.target.value
+            })}
           />
         );
         break;
 
       case "select":
         element = (
-          <select>
+          <Select
+          onValueChange={(value)=> setFormData({
+            ...formData ,
+            [getControlItem.name] : value
+          })}
+          value={currentControlItemvalue}
+          >
             <SelectTrigger className="w-full">
               <SelectValue placeholder={getControlItem.label} />
             </SelectTrigger>
@@ -40,7 +53,7 @@ function FormControls({ formControls = [], formData, setFormData }) {
                   ))
                 : null}
             </SelectContent>
-          </select>
+          </Select>
         );
         break;
 
@@ -49,6 +62,11 @@ function FormControls({ formControls = [], formData, setFormData }) {
         id={getControlItem.name}
         name={getControlItem.name}
         placeholder={getControlItem.placeholder}
+        value={currentControlItemvalue}
+        onChange ={(event)=> setFormData({
+          ...formData,
+          [getControlItem.name] : event.target.value
+        })}
 
         />;
         break;
@@ -58,6 +76,12 @@ function FormControls({ formControls = [], formData, setFormData }) {
         name={getControlItem.name}
         placeholder={getControlItem.placeholder}
         type={getControlItem.type}
+        value={currentControlItemvalue}
+        onChange ={(event)=> setFormData({
+          ...formData,
+          [getControlItem.name] : event.target.value
+        })}
+        
         />;
         break;
         
@@ -69,7 +93,7 @@ function FormControls({ formControls = [], formData, setFormData }) {
       <label htmlFor=""></label>
       {formControls.map((controleItem) => (
         <div key={controleItem.name}>
-          <Label className = "flex justify-start p-2"htmlFor={controleItem.name}>{controleItem.label}</Label>
+          <Label className = "flex justify-start m-1"htmlFor={controleItem.name}>{controleItem.label}</Label>
           {renderComponentByType(controleItem)}
         </div>
       ))}

@@ -8,22 +8,25 @@ const PORT = process.env.PORT || 5000;
 const MONGO_URI = process.env.MONGO_URI;
 const mongoose = require("mongoose");
 
-cors({
+const authRoutes = require('./routes/auth-routes/index');
+
+
+app.use(cors({
   origin: process.env.CLIENT_URL,
   methods: ["GET", "POST", "DELETE", "PUT"],
   allowedHeaders: ["Content-Type", "Authorization"],
-});
+}))
 
 app.use(express.json());
 
 // Database Connection
 mongoose
   .connect(MONGO_URI)
-  .then(() => console.log("MOngodb is connected"))
+  .then(() => console.log("Mongodb is connected"))
   .catch((e) => console.log("error", e));
 
 // routes Configuration
-
+app.use('/auth', authRoutes);
 
 
   app.use((err,req,res,next)=>{

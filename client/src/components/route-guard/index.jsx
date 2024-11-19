@@ -5,7 +5,9 @@ import { Fragment } from 'react'
 
 function RouterGuard({authenticated , user , element}){
     const location = useLocation();
-    console.log(authenticated,user)
+    console.log("RouteGuard :",authenticated,user);
+
+    const userRole = user?.role || 'guest';
 
     if(!authenticated && !location.pathname.includes('/auth')){
         return <Navigate to='/auth'/>
@@ -22,7 +24,7 @@ function RouterGuard({authenticated , user , element}){
 
     if( 
         authenticated && 
-        user.role === 'instructor' && 
+        user?.role === 'instructor' && 
         !location.pathname.includes('instructor')
     ){
         return <Navigate to='/instructor'/>
